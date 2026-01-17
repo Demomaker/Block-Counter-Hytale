@@ -1,0 +1,18 @@
+{
+  "Group": "net.demomaker",
+  "Name": "BlockCounterPlugin",
+  "Version": "${version}",
+  "Description": "Count blocks!",
+  "Authors": [
+    {
+      "Name": "Demomaker"
+    }
+  ],
+  "Website": "",
+  "ServerVersion": "*",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "IncludesAssetPack": false,
+  "Main": "net.demomaker.BlockCounterPlugin"
+}
