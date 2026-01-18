@@ -5,7 +5,7 @@ import net.demomaker.message.MessageSender;
 
 public class Debugger {
     private final CommandContext debugCommandContext;
-    private static boolean isDebugActive = true;
+    private static boolean isDebugActive = false;
 
     public Debugger(CommandContext debugCommandContext) {
         this.debugCommandContext = debugCommandContext;

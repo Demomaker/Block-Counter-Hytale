@@ -1,6 +1,7 @@
 package net.demomaker.algorithm;
 
 import com.hypixel.hytale.math.shape.Box;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blockhitbox.BlockBoundingBoxes;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -22,7 +23,8 @@ public class Algorithm {
         Vector3i start = generateSmallestVector(algorithmInput.first_position, algorithmInput.second_position);
         Vector3i end = generateBiggestVector(algorithmInput.first_position, algorithmInput.second_position);
 
-        Set<Vector3i> countedPositions = new HashSet<>();
+        Set<String> occupiedSpaces = new HashSet<>();
+
         int loops = 0;
 
         for (int x = start.x; x <= end.x; x++) {
@@ -37,7 +39,7 @@ public class Algorithm {
 
                     Vector3i currentPos = new Vector3i(x, y, z);
 
-                    if (countedPositions.contains(currentPos)) {
+                    if (occupiedSpaces.contains(currentPos.toString())) {
                         continue;
                     }
 
@@ -46,10 +48,11 @@ public class Algorithm {
                     String blockTypeId = (blockType == null || blockType.getId() == null) ? "Empty" : blockType.getId();
 
                     Box box = getBoundingBox(blockType);
+
                     if(!box.isUnitBox()) {
-                        addMultiblockToSet(currentPos, box, countedPositions);
+                        addMultiblockToSet(new Vector3i(currentPos), box, occupiedSpaces);
                     } else {
-                        countedPositions.add(currentPos);
+                        occupiedSpaces.add(new Vector3i(currentPos).toString());
                     }
 
                     // Update the count map
@@ -61,14 +64,20 @@ public class Algorithm {
         return algorithmOutput;
     }
 
-    private void addMultiblockToSet(Vector3i origin, Box box, Set<Vector3i> set) {
-        Vector3i min = origin.add(box.getMin().floor().toVector3i());
-        Vector3i max = origin.add(box.getMax().add(-0.01, -0.01, -0.01).floor().toVector3i());
+    private void addMultiblockToSet(Vector3i origin, Box box, Set<String> set) {
+        Vector3i min = new Vector3i(origin);
+        Vector3i diffBetweenMinAndMaxBox = new Vector3d(box.getMax()).add(-0.01, -0.01, -0.01).floor().subtract(new Vector3d(box.getMin().floor())).toVector3i();
+        Vector3i max = new Vector3i(origin).add(diffBetweenMinAndMaxBox);
+
+        debugger.log("min : " + min.toString());
+        debugger.log("max : " + max.toString());
 
         for (int x = min.x; x <= max.x; x++) {
             for (int y = min.y; y <= max.y; y++) {
                 for (int z = min.z; z <= max.z; z++) {
-                    set.add(new Vector3i(x, y, z));
+                    Vector3i multiblock = new Vector3i(x, y, z);
+                    debugger.log("multiblock : " + multiblock.toString());
+                    set.add(multiblock.toString());
                 }
             }
         }
