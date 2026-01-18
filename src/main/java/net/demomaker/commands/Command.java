@@ -27,6 +27,12 @@ public class Command<T extends BlockCounterCommand> {
                 "blockcounter-setposition",
                 "set position so that it is simpler to execute the counting algorithm",
                 "usage : /blockcounter-setposition"));
+        commandList.add(new Command<SetBlockLimitCommand>(
+                SetBlockLimitCommand.class,
+                "blockcounter-setlimit",
+                "set the limit of amount of blocks the algorithm will count",
+                "usage /blockcounter-setlimit <number>"
+        ));
         return commandList;
     }
 

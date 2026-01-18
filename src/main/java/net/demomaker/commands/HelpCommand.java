@@ -1,24 +1,23 @@
 package net.demomaker.commands;
 
-import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import net.demomaker.message.MessageSender;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
-import org.checkerframework.checker.nullness.compatqual.NullableDecl;
-
-import java.util.concurrent.CompletableFuture;
 
 public class HelpCommand extends BlockCounterCommand {
     protected HelpCommand(String name, String description) {
         super(name, description);
     }
 
-    @NullableDecl
     @Override
-    protected CompletableFuture<Void> execute(@NonNullDecl CommandContext commandContext) {
-        super.execute(commandContext);
+    protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
+        super.execute(commandContext, store, ref, playerRef, world);
         MessageSender.sendMessage(commandContext, createMessage());
-        return CompletableFuture.completedFuture(null);
     }
 
     private String createMessage() {
