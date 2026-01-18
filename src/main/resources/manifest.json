@@ -14,5 +14,6 @@
   "OptionalDependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": false,
-  "Main": "net.demomaker.BlockCounterPlugin"
+  "Main": "net.demomaker.BlockCounterPlugin",
+  "Icon": "logo.png"
 }
