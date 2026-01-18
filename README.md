@@ -6,5 +6,15 @@
 
 This project is licensed under the **CC0 1.0 Universal License**. See the [LICENSE](LICENSE) file for more details.
 
+## Commands
+
+/blockcounter-setposition : allows the player to set a first and second position to count blocks in (the algorithm executes after the second position is set).
+
+/blockcounter-countblocks <first_position> <second_position> : allows the player to count blocks between <first_position> and <second_position>
+
+/blockcounter-setlimit : sets a limit of the amount of blocks/loops will be executed before returning a result (to avoid the server crashing after too many loops)
+
+/blockcounter-help : helper utility to know the commands of the mod
+
 ---
 *Maintained by [Demomaker](https://github.com/Demomaker)*
