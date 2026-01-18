@@ -12,7 +12,7 @@ This project is licensed under the **CC0 1.0 Universal License**. See the [LICEN
 
 /blockcounter-countblocks <first_position> <second_position> : allows the player to count blocks between <first_position> and <second_position>
 
-/blockcounter-setlimit : sets a limit of the amount of blocks/loops will be executed before returning a result (to avoid the server crashing after too many loops)
+/blockcounter-setlimit <number>: sets a limit of the amount of blocks/loops will be executed before returning a result (to avoid the server crashing after too many loops)
 
 /blockcounter-help : helper utility to know the commands of the mod
 
