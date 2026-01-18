@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import net.demomaker.algorithm.Algorithm;
 import net.demomaker.algorithm.AlgorithmInput;
 import net.demomaker.algorithm.AlgorithmOutput;
+import net.demomaker.debug.Debugger;
 import net.demomaker.message.MessageSender;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
@@ -35,7 +36,7 @@ public class SetPositionCommand extends BlockCounterCommand {
 
         MessageSender.sendMessage(commandContext, createPositionSetMessage(position, "second"));
         Algorithm algorithm = new Algorithm();
-        algorithm.debugCommandContext = commandContext;
+        algorithm.debugger = new Debugger(commandContext);
 
         AlgorithmInput algorithmInput = new AlgorithmInput(world, temp_stored_position, position);
         AlgorithmOutput algorithmOutput = algorithm.count(algorithmInput);

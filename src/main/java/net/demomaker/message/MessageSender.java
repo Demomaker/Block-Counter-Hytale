@@ -3,17 +3,14 @@ package net.demomaker.message;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import net.demomaker.shared.BuildInfo;
 
 public class MessageSender {
     public static void sendMessage(CommandContext commandContext, String message) {
         commandContext.sendMessage(Message.raw(wrapMessage(message)));
     }
 
-    public static void sendDebugMessage(CommandContext commandContext, String message) {
-        if (BuildInfo.isDebug) {
-            commandContext.sendMessage(Message.raw(message));
-        }
+    public static void sendMessageWithoutWrapper(CommandContext commandContext, String message) {
+        commandContext.sendMessage(Message.raw(message));
     }
 
     public static void sendMessage(Player player, String message) {
