@@ -40,7 +40,9 @@ public class SetPositionCommand extends BlockCounterCommand {
 
         AlgorithmInput algorithmInput = new AlgorithmInput(world, temp_stored_position, position);
         AlgorithmOutput algorithmOutput = algorithm.count(algorithmInput);
-        MessageSender.sendMessage(commandContext, algorithmOutput.toString());
+        String output = algorithmOutput.toString();
+        MessageSender.sendMessage(commandContext, output);
+        MessageSender.copyToClipboard(commandContext, output);
     }
 
     public String createPositionSetMessage(Vector3i position, String first_or_second) {

@@ -34,6 +34,8 @@ public class CountBlocksCommand extends BlockCounterCommand {
 
         AlgorithmInput algorithmInput = new AlgorithmInput(world, first_position.get(commandContext), second_position.get(commandContext));
         AlgorithmOutput algorithmOutput = algorithm.count(algorithmInput);
-        MessageSender.sendMessage(commandContext, algorithmOutput.toString());
+        String output = algorithmOutput.toString();
+        MessageSender.sendMessage(commandContext, output);
+        MessageSender.copyToClipboard(commandContext, output);
     }
 }

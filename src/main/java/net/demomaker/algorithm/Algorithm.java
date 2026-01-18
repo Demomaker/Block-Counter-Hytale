@@ -28,7 +28,6 @@ public class Algorithm {
         for (int x = start.x; x <= end.x; x++) {
             for (int y = start.y; y <= end.y; y++) {
                 for (int z = start.z; z <= end.z; z++) {
-                    Vector3i currentPos = new Vector3i(x, y, z);
                     loops++;
 
                     if ((loops >= BuildInfo.debugBlockCountLimit && Debugger.canDebug())
@@ -36,16 +35,22 @@ public class Algorithm {
                         return algorithmOutput;
                     }
 
+                    Vector3i currentPos = new Vector3i(x, y, z);
+
+                    if (countedPositions.contains(currentPos)) {
+                        continue;
+                    }
+
                     BlockType blockType = this.world.getBlockType(currentPos);
 
                     String blockTypeId = (blockType == null || blockType.getId() == null) ? "Empty" : blockType.getId();
 
-                    if (!canCountBlock(blockType, currentPos, start, end, countedPositions)) {
+                    Box box = getBoundingBox(blockType);
+                    if(!box.isUnitBox()) {
+                        addMultiblockToSet(currentPos, box, countedPositions);
+                    } else {
                         countedPositions.add(currentPos);
-                        continue;
                     }
-
-                    countedPositions.add(currentPos);
 
                     // Update the count map
                     algorithmOutput.counts.put(blockTypeId, algorithmOutput.counts.getOrDefault(blockTypeId, 0) + 1);
@@ -56,92 +61,17 @@ public class Algorithm {
         return algorithmOutput;
     }
 
-    public boolean canCountBlock(BlockType blockType, Vector3i counter, Vector3i countStartBound, Vector3i countEndBound, Set<Vector3i> countedPositions) {
-        Box boundingBox = getBoundingBox(blockType);
-        if (boundingBox.isUnitBox()) {
-            return true;
-        }
+    private void addMultiblockToSet(Vector3i origin, Box box, Set<Vector3i> set) {
+        Vector3i min = origin.add(box.getMin().floor().toVector3i());
+        Vector3i max = origin.add(box.getMax().add(-0.01, -0.01, -0.01).floor().toVector3i());
 
-        debugger.log("boundingBox : " + boundingBox.toString());
-        Vector3i maxAsVector3i = boundingBox.getMax().ceil().toVector3i();
-        Vector3i minAsVector3i = boundingBox.getMin().ceil().toVector3i();
-        Vector3i maxWithAllOnesRemoved = maxAsVector3i.subtract(Vector3i.ALL_ONES);
-        debugger.log("maxWithAllOnesRemoved : " + maxWithAllOnesRemoved.toString());
-        debugger.log("minAsVector3i : " + minAsVector3i.toString());
-        // Determine the actual world-space area this block occupies
-        Vector3i blockMin = new Vector3i(counter).add(minAsVector3i);
-        Vector3i blockMax = new Vector3i(counter).add(maxWithAllOnesRemoved);
-        debugger.log("blockMin : " + blockMin.toString());
-        debugger.log("blockMax : " + blockMax.toString());
-
-        // Define the counting area boundaries (handling potential min/max flip)
-        int rangeMinX = Math.min(countStartBound.x, countEndBound.x);
-        int rangeMaxX = Math.max(countStartBound.x, countEndBound.x);
-        int rangeMinY = Math.min(countStartBound.y, countEndBound.y);
-        int rangeMaxY = Math.max(countStartBound.y, countEndBound.y);
-        int rangeMinZ = Math.min(countStartBound.z, countEndBound.z);
-        int rangeMaxZ = Math.max(countStartBound.z, countEndBound.z);
-        debugger.log("range min Vector : " + new Vector3i(rangeMinX, rangeMinY, rangeMinZ).toString());
-        debugger.log("range max Vector : " + new Vector3i(rangeMaxX, rangeMaxY, rangeMaxZ).toString());
-
-        // Intersection: The loop only runs for the part of the block inside the counting range
-        int startX = Math.min(Math.max(blockMin.x, rangeMinX), rangeMaxX);
-        int endX = Math.max(Math.min(blockMax.x, rangeMaxX), rangeMinX);
-        int startY = Math.min(Math.max(blockMin.y, rangeMinY), rangeMaxY);
-        int endY = Math.max(Math.min(blockMax.y, rangeMaxY), rangeMinY);
-        int startZ = Math.min(Math.max(blockMin.z, rangeMinZ), rangeMaxZ);
-        int endZ = Math.max(Math.min(blockMax.z, rangeMaxZ), rangeMinZ);
-        debugger.log("start Vector : " + new Vector3i(startX, startY, startZ));
-        debugger.log("end Vector : " + new Vector3i(endX, endY, endZ));
-
-        for (int x = startX; x <= endX; x++) {
-            for (int y = startY; y <= endY; y++) {
-                for (int z = startZ; z <= endZ; z++) {
-                    Vector3i checkPos = new Vector3i(x, y, z);
-                    debugger.log("currentCheck : " + checkPos.toString());
-
-                    BlockType currentBlockType = this.world.getBlockType(checkPos);
-
-                    if (currentBlockType.getId().equals(blockType.getId()) && countedPositions.contains(checkPos)) {
-                        debugger.log("will not count this block");
-                        return false;
-                    }
-
-                    debugger.log("will count this block");
+        for (int x = min.x; x <= max.x; x++) {
+            for (int y = min.y; y <= max.y; y++) {
+                for (int z = min.z; z <= max.z; z++) {
+                    set.add(new Vector3i(x, y, z));
                 }
             }
         }
-
-        return true;
-    }
-
-    public Vector3i removeSameValues(Vector3i originalVector, Vector3i comparison) {
-        Vector3i newValue = new Vector3i(originalVector);
-        if(newValue.x == comparison.x) {
-            newValue.x = 0;
-        }
-        if(newValue.y == comparison.y) {
-            newValue.y = 0;
-        }
-        if(newValue.z == comparison.z) {
-            newValue.z = 0;
-        }
-        return newValue;
-    }
-
-    public Vector3i putToNegative(Vector3i original) {
-        Vector3i newValue = new Vector3i(original);
-        if(newValue.x > 0) {
-            newValue.x = -newValue.x;
-        }
-        if(newValue.y > 0) {
-            newValue.y = -newValue.y;
-        }
-        if(newValue.z > 0) {
-            newValue.z = -newValue.z;
-        }
-
-        return newValue;
     }
 
     public Vector3i generateSmallestVector(Vector3i first_vector, Vector3i second_vector) {
@@ -183,9 +113,5 @@ public class Algorithm {
         } catch (Exception e) {
             return Box.UNIT;
         }
-    }
-
-    public boolean isMultiBlockChild(BlockType blockType) {
-        return false;
     }
 }
