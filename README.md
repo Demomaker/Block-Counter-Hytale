@@ -17,4 +17,45 @@ This project is licensed under the **CC0 1.0 Universal License**. See the [LICEN
 /blockcounter-help : helper utility to know the commands of the mod
 
 ---
+
 *Maintained by [Demomaker](https://github.com/Demomaker)*
+
+## How to develop
+
+Step 1 : [clone the repo](https://github.com/Demomaker/Block-Counter-Hytale)
+
+Step 2 : open the repo in IntelliJ or some other IDE that supports java development
+
+Step 3 : go in your Hytale game folder and find HytaleServer.jar
+
+Step 4 : put the HytaleServer.jar at the root of the project (where you cloned the repo)
+
+Step 5 : `maven install` & `maven build`
+
+Step 6 : code with that
+
+Step 7 : `maven package`
+
+Step 8 : find the `target` folder in the repo after generating the package and take the generated file from there
+
+Step 9 : put the generated file in a world's mod folder in Hytale
+
+Step 10 : launch Hytale and test the mod
+
+Step 11 : if changes needed, code again and repeat steps 7 to 10. otherwise step 12
+
+Step 12 : [change version of the mod](pom.xml), commit and push the changes onto github : 
+
+Step 12a0 : `git pull`
+
+Step 12a : `git add .`
+
+Step 12b : `git commit -m "summary of changes"`
+
+Step 12c : `git push`
+
+Step 13 : [publish the package in a github release with version tag changed](https://github.com/Demomaker/Block-Counter-Hytale/releases/new)
+
+Step 14 : upload to [modtale](https://modtale.net/mod/demomaker-s-block-counter-35cd5c91-b3f8-4d15-ab13-413ae4b58206) and [curseforge](https://legacy.curseforge.com/hytale/mods/demomakers-block-counter)
+
+Step 15 : wait and see if things break lol
